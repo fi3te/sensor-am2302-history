@@ -1,8 +1,14 @@
 import * as cron from 'node-cron';
 import * as fs from 'fs';
-import * as path from 'path';
 import * as moment from 'moment';
+import * as path from 'path';
+import * as sensor from 'node-dht-sensor';
 
+const SENSOR_TYPE = 22;
+const PIN = 2;
+// runs every minute
+const CRON_EXPRESSION = '* * * * *';
+export const DATA_DIRECTORY = path.join(__dirname, '..', 'data');
 export const FILE_EXTENSION = '.txt';
 export const CONTENT_TYPE = 'text/plain';
 
@@ -14,7 +20,7 @@ export function getFileName(): string {
 }
 
 function getFilePath(): string {
-    return path.join(__dirname, '..', 'data', getFileName());
+    return path.join(DATA_DIRECTORY, getFileName());
 }
 
 function openNewWriteStream(newFilePath: string): void {
@@ -27,17 +33,20 @@ function openNewWriteStream(newFilePath: string): void {
     currentFilePath = newFilePath;
 }
 
-// runs every minute
-const cronExpression = '* * * * *';
-
 export function startDataCollector() {
-    cron.schedule(cronExpression, () => {
+    cron.schedule(CRON_EXPRESSION, () => {
         const filePath = getFilePath();
         if (currentFilePath !== filePath) {
+            if (!fs.existsSync(DATA_DIRECTORY)) {
+                fs.mkdirSync(DATA_DIRECTORY);
+            }
             openNewWriteStream(filePath);
         }
 
-        // TODO demo
-        stream.write(new Date().toISOString() + '\n');
+        sensor.read(SENSOR_TYPE, PIN, (err: any, temperature: number, humidity: number) => {
+            if (!err) {
+                stream.write(`temperature: ${temperature}°C, humidity: ${humidity}%\n`);
+            }
+        });
     });
 }

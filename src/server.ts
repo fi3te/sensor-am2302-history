@@ -1,14 +1,14 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as http from 'http';
-import { startDataCollector, getFileName, FILE_EXTENSION, CONTENT_TYPE } from './data-collector';
+import { startDataCollector, getFileName, DATA_DIRECTORY, FILE_EXTENSION, CONTENT_TYPE } from './data-collector';
 
 startDataCollector();
 
 const port = 4000;
 
 function downloadFile(res: http.ServerResponse, fileName: string): void {
-    const pathToFile = path.join(__dirname, '..', 'data', fileName);
+    const pathToFile = path.join(DATA_DIRECTORY, fileName);
     if (fs.existsSync(pathToFile)) {
         fs.readFile(
             pathToFile,
@@ -30,7 +30,7 @@ function downloadFile(res: http.ServerResponse, fileName: string): void {
 const server = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
     if (req.url && req.url === '/api') {
         fs.readdir(
-            path.join(__dirname, '..', 'data'),
+            DATA_DIRECTORY,
             (err: NodeJS.ErrnoException | null, files: string[]) => {
                 if (err) {
                     res.end(err.message);
