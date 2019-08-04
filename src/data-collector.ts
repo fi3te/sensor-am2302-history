@@ -10,7 +10,7 @@ const PIN = 2;
 const CRON_EXPRESSION = '* * * * *';
 export const DATA_DIRECTORY = path.join(__dirname, '..', 'data');
 export const FILE_EXTENSION = '.txt';
-export const CONTENT_TYPE = 'text/plain';
+export const CONTENT_TYPE = 'text/plain; charset=utf-8';
 
 let stream: fs.WriteStream;
 let currentFilePath: string;
