@@ -45,7 +45,8 @@ export function startDataCollector() {
 
         sensor.read(SENSOR_TYPE, PIN, (err: any, temperature: number, humidity: number) => {
             if (!err) {
-                stream.write(`temperature: ${temperature}°C, humidity: ${humidity}%\n`);
+                const time = moment().format('HH:mm:ss');
+                stream.write(`${time} temperature: ${temperature.toFixed(2)}°C, humidity: ${humidity.toFixed(2)}%\n`);
             }
         });
     });
