@@ -2,10 +2,8 @@ import * as cron from 'node-cron';
 import * as fs from 'fs';
 import * as moment from 'moment';
 import * as path from 'path';
-import * as sensor from 'node-dht-sensor';
+import { read } from './sensor';
 
-const SENSOR_TYPE = 22;
-const PIN = 2;
 // runs every minute
 const CRON_EXPRESSION = '* * * * *';
 export const DATA_DIRECTORY = path.join(__dirname, '..', 'data');
@@ -43,7 +41,7 @@ export function startDataCollector() {
             openNewWriteStream(filePath);
         }
 
-        sensor.read(SENSOR_TYPE, PIN, (err: any, temperature: number, humidity: number) => {
+        read((err: any, temperature: number, humidity: number) => {
             if (!err) {
                 const time = moment().format('HH:mm:ss');
                 stream.write(`${time} temperature: ${temperature.toFixed(2)}°C, humidity: ${humidity.toFixed(2)}%\n`);
