@@ -1,7 +1,7 @@
 import * as os from "os";
 
 let sensor;
-if (os.type().toLowerCase() === 'linux') {
+if (os.type().toLowerCase() === 'linux' && os.arch() === 'arm') {
     sensor = require('node-dht-sensor');
     if (!sensor) {
         throw new Error('Module "node-dht-sensor" not found!');
