@@ -2,5 +2,6 @@
 .idea
 dist
 node_modules
+application.env
 Dockerfile*
 docker-compose*

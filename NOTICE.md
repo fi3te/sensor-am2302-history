@@ -2,6 +2,10 @@
 
 ## Dependencies
 
+- https://github.com/motdotla/dotenv  
+  Copyright (c) 2015 Scott Motte  
+  Licensed under the BSD-2-Clause License (copy below)
+
 - https://github.com/moment/moment  
   Copyright (c) JS Foundation and other contributors  
   Licensed under the MIT License (copy below)

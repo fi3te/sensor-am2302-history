@@ -3,9 +3,8 @@ import moment from "moment";
 import * as cron from "node-cron";
 import * as path from "path";
 import { read } from "./sensor";
+import { Env } from "./environment";
 
-// runs every minute
-const CRON_EXPRESSION = "* * * * *";
 export const DATA_DIRECTORY = path.join(__dirname, "..", "data");
 export const FILE_EXTENSION = ".txt";
 export const CONTENT_TYPE = "text/plain; charset=utf-8";
@@ -31,8 +30,11 @@ function openNewWriteStream(newFilePath: string): void {
     currentFilePath = newFilePath;
 }
 
-export function startDataCollector() {
-    cron.schedule(CRON_EXPRESSION, () => {
+export function startDataCollector(env: Env): void {
+    const sensorType = +env.SENSOR_TYPE;
+    const gpioPin = +env.GPIO_PIN;
+
+    cron.schedule(env.CRON_EXPRESSION, () => {
         const filePath = getFilePath();
         if (currentFilePath !== filePath) {
             if (!fs.existsSync(DATA_DIRECTORY)) {
@@ -41,11 +43,12 @@ export function startDataCollector() {
             openNewWriteStream(filePath);
         }
 
-        read((err: Error | undefined, temperature: number, humidity: number) => {
+        read(sensorType, gpioPin, (err: Error | undefined, temperature: number, humidity: number) => {
             if (!err) {
                 const time = moment().format("HH:mm:ss");
                 stream.write(`${time} temperature: ${temperature.toFixed(2)}°C, humidity: ${humidity.toFixed(2)}%\n`);
             }
         });
     });
+    console.log(`Created recurring task for cron expression ${env.CRON_EXPRESSION}.`);
 }

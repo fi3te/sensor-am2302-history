@@ -2,8 +2,11 @@ import * as path from "path";
 import * as fs from "fs";
 import * as http from "http";
 import { startDataCollector, getFileName, DATA_DIRECTORY, FILE_EXTENSION, CONTENT_TYPE } from "./data-collector";
+import { loadEnv } from "./environment";
 
-startDataCollector();
+const env = loadEnv();
+
+startDataCollector(env);
 
 const port = 4000;
 

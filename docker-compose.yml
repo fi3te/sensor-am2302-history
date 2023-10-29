@@ -6,8 +6,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.armv7
-    environment:
-      - TZ=Europe/Berlin
+    env_file: application.env
     ports:
       - "4000:4000"
     volumes:

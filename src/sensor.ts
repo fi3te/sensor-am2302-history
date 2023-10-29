@@ -8,14 +8,11 @@ if (os.type().toLowerCase() === "linux" && os.arch() === "arm") {
     }
 }
 
-const SENSOR_TYPE = 22;
-const PIN = 2;
-
-function sensorRead(callback: (err: Error | undefined, temperature: number, humidity: number) => void): void {
-    sensor.read(SENSOR_TYPE, PIN, callback);
+function sensorRead(sensorType: number, gpioPin: number, callback: (err: Error | undefined, temperature: number, humidity: number) => void): void {
+    sensor.read(sensorType, gpioPin, callback);
 }
 
-function dummyRead(callback: (err: Error | undefined, temperature: number, humidity: number) => void): void {
+function dummyRead(sensorType: number, gpioPin: number, callback: (err: Error | undefined, temperature: number, humidity: number) => void): void {
     callback(undefined, 20, 50);
 }
 
