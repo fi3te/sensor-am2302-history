@@ -1,13 +1,18 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "outDir": "dist",
-    "strict": true,
-    "target": "es6",
-    "noImplicitAny": false
-  },
-  "include": [
-    "src/**/*.ts"
-  ]
+    "compilerOptions": {
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "target": "es2020",
+        "strict": true,
+        "skipLibCheck": true,
+        "outDir": "dist",
+        "baseUrl": "./src",
+        "noImplicitAny": false
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "ts-node": {
+        "esm": true
+    }
 }

@@ -1,7 +1,7 @@
-import * as path from 'path';
-import * as fs from 'fs';
-import * as http from 'http';
-import { startDataCollector, getFileName, DATA_DIRECTORY, FILE_EXTENSION, CONTENT_TYPE } from './data-collector';
+import * as path from "path";
+import * as fs from "fs";
+import * as http from "http";
+import { startDataCollector, getFileName, DATA_DIRECTORY, FILE_EXTENSION, CONTENT_TYPE } from "./data-collector";
 
 startDataCollector();
 
@@ -16,47 +16,47 @@ function downloadFile(res: http.ServerResponse, fileName: string): void {
                 if (err) {
                     res.end(err.message);
                 } else {
-                    res.writeHead(200, {'Content-Type': CONTENT_TYPE});
+                    res.writeHead(200, {"Content-Type": CONTENT_TYPE});
                     res.end(data);
                 }
             }
-        )
+        );
     } else {
-        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.writeHead(200, {"Content-Type": "text/plain"});
         res.end(`File ${fileName} does not exist.`);
     }
 }
 
 const server = http.createServer((req: http.IncomingMessage, res: http.ServerResponse) => {
-    if (req.url && req.url === '/api') {
+    if (req.url && req.url === "/api") {
         fs.readdir(
             DATA_DIRECTORY,
             (err: NodeJS.ErrnoException | null, files: string[]) => {
                 if (err) {
                     res.end(err.message);
                 } else {
-                    res.writeHead(200, {'Content-Type': 'text/html; charset=UTF-8'});
-                    res.write('<!doctype html>');
-                    res.write('<html>');
-                    res.write('<head><meta charset="utf-8"><title>sensor-am2302-history</title></head>');
-                    res.write('<body>');
+                    res.writeHead(200, {"Content-Type": "text/html; charset=UTF-8"});
+                    res.write("<!doctype html>");
+                    res.write("<html>");
+                    res.write("<head><meta charset=\"utf-8\"><title>sensor-am2302-history</title></head>");
+                    res.write("<body>");
 
-                    res.write('<h3>Data</h3>');
+                    res.write("<h3>Data</h3>");
                     for (const file of files) {
-                        const resource = file.replace(FILE_EXTENSION, '');
+                        const resource = file.replace(FILE_EXTENSION, "");
                         res.write(`<a href="/${resource}">${resource}</a><br>`);
                     }
 
-                    res.write('</body>');
-                    res.write('</html>');
+                    res.write("</body>");
+                    res.write("</html>");
                     res.end();
                 }
             }
-        )
-    } else if (req.url && req.url === '/') {
+        );
+    } else if (req.url && req.url === "/") {
         downloadFile(res, getFileName());
     } else if (req.url) {
-        const fileName = req.url.replace('/', '') + FILE_EXTENSION;
+        const fileName = req.url.replace("/", "") + FILE_EXTENSION;
         downloadFile(res, fileName);
     }
 });

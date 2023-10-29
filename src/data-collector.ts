@@ -1,20 +1,20 @@
-import * as cron from 'node-cron';
-import * as fs from 'fs';
-import * as moment from 'moment';
-import * as path from 'path';
-import { read } from './sensor';
+import * as fs from "fs";
+import moment from "moment";
+import * as cron from "node-cron";
+import * as path from "path";
+import { read } from "./sensor";
 
 // runs every minute
-const CRON_EXPRESSION = '* * * * *';
-export const DATA_DIRECTORY = path.join(__dirname, '..', 'data');
-export const FILE_EXTENSION = '.txt';
-export const CONTENT_TYPE = 'text/plain; charset=utf-8';
+const CRON_EXPRESSION = "* * * * *";
+export const DATA_DIRECTORY = path.join(__dirname, "..", "data");
+export const FILE_EXTENSION = ".txt";
+export const CONTENT_TYPE = "text/plain; charset=utf-8";
 
 let stream: fs.WriteStream;
 let currentFilePath: string;
 
 export function getFileName(): string {
-    return moment().format('YYYY-MM-DD') + FILE_EXTENSION;
+    return moment().format("YYYY-MM-DD") + FILE_EXTENSION;
 }
 
 function getFilePath(): string {
@@ -26,7 +26,7 @@ function openNewWriteStream(newFilePath: string): void {
         stream.end();
     }
     stream = fs.createWriteStream(newFilePath, {
-        flags: 'a'
+        flags: "a"
     });
     currentFilePath = newFilePath;
 }
@@ -41,9 +41,9 @@ export function startDataCollector() {
             openNewWriteStream(filePath);
         }
 
-        read((err: any, temperature: number, humidity: number) => {
+        read((err: Error | undefined, temperature: number, humidity: number) => {
             if (!err) {
-                const time = moment().format('HH:mm:ss');
+                const time = moment().format("HH:mm:ss");
                 stream.write(`${time} temperature: ${temperature.toFixed(2)}°C, humidity: ${humidity.toFixed(2)}%\n`);
             }
         });
